@@ -21,6 +21,8 @@ export interface ModelType {
   version: number;
 }
 
+export type TransformTye = "position" | "rotation" | "scale";
+
 export interface InstanceModelType {
   modelName: string;
   url: string;

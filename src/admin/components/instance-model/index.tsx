@@ -32,6 +32,7 @@ const InstanceModel = ({ instance }: DataTypeProps) => {
     selectMultiple.forEach((model) => {
       mapSelect.current.set(model.id, model);
     });
+    selectedInstanceRef.current = cloneDeep(selectMultiple);
     for (let i = 0; i < data.length; i++) {
       const item = cloneDeep(data[i]);
       const { position, rotation, scale, color, id } = item;
@@ -75,7 +76,7 @@ const InstanceModel = ({ instance }: DataTypeProps) => {
     const mousePos = getMousePosition(offsetX, offsetY);
     const deltaPosition = getDeltaPosition(mousePos, draggingRef.current);
     mapSelect.current.clear();
-    selectMultiple.forEach((model) => {
+    selectedInstanceRef.current.forEach((model) => {
       mapSelect.current.set(model.id, model);
     });
     for (let i = 0; i < data.length; i++) {

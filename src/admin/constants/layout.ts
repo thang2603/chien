@@ -8,23 +8,6 @@ export const STEP_POSITION = 0.1;
 export const STEP_ROTATION = 5;
 export const STEP_SCALE = 0.1;
 export const TRANFORM_CONTROLS = ["x", "y", "z"];
-export const TRANSFORM_MODEL = {
-  position: {
-    label: "Position",
-    value: "position",
-    step: STEP_POSITION,
-  },
-  rotation: {
-    label: "Rotation",
-    value: "rotation",
-    step: STEP_ROTATION,
-  },
-  scale: {
-    label: "Scale",
-    value: "scale",
-    step: STEP_SCALE,
-  },
-};
 
 export const INIT_MODEL = {
   position: INIT_POSITION,

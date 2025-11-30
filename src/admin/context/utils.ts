@@ -1,10 +1,11 @@
+import cloneDeep from "lodash.clonedeep";
 import type { InstanceModelType, ModelType } from "../types/model";
 
 export const handleAddListModel = (
   models: ModelType[],
   listModels: Record<string, InstanceModelType>
 ) => {
-  const newListModels = { ...listModels };
+  const newListModels = cloneDeep(listModels);
   models.forEach((model) => {
     if (!newListModels[model.modelName]) {
       newListModels[model.modelName] = {
@@ -26,7 +27,7 @@ export const handleUpdateListModel = (
   models.forEach((model) => {
     mapModel.set(model.id, model);
   });
-  let newListModels = { ...listModels };
+  let newListModels = cloneDeep(listModels);
   Object.entries(newListModels).forEach(([modelName, instance]) => {
     const newData = instance.data.map((model) => {
       const modelUpdate = mapModel.get(model.id);
