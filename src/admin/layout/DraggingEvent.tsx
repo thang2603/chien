@@ -18,10 +18,9 @@ const DraggingEvent = () => {
   const getMousePosition = useMousePosition();
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      //   e.stopPropagation();
-      //   e.preventDefault();
       if (e.key.toUpperCase() === "G") {
-        console.log(draggingRef.current);
+        e.stopPropagation();
+        e.preventDefault();
         if (!draggingRef.current) {
           const { offsetX, offsetY } = offsetRef.current;
           const mousePos = getMousePosition(offsetX, offsetY);
@@ -31,7 +30,6 @@ const DraggingEvent = () => {
           }
           toast.success("Started dragging ");
         } else {
-          console.log(selectedInstanceRef.current);
           const newListInstances = handleUpdateListModel(
             cloneDeep(selectedInstanceRef.current),
             listInstances

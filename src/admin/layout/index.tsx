@@ -1,5 +1,6 @@
 import MenuControlModel from "../components/menu-create/MenuControlModel";
 import MenuControlMultipleModel from "../components/menu-create/MenuControlMultipleModel";
+import SaveModel from "../components/menu-create/SaveModel";
 import MenuModel from "../components/menu-model";
 import { ModelProvider } from "../context/ModelContext";
 import CanvasLayout from "./CanvasLayout";
@@ -13,6 +14,9 @@ const Layout = () => {
             <CanvasLayout />
             <MenuControlModel />
             <MenuControlMultipleModel />
+            <div className="absolute top-1 right-10">
+              <SaveModel />
+            </div>
           </div>
           <MenuModel />
         </div>

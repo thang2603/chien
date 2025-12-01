@@ -46,3 +46,26 @@ export const handleUpdateListModel = (
   });
   return newListModels;
 };
+
+export const handleDeleteListModel = (
+  models: ModelType[],
+  listModels: Record<string, InstanceModelType>
+) => {
+  let newListModels: Record<string, InstanceModelType> = {};
+  const mapModel = new Map<string, ModelType>();
+  models.forEach((model) => {
+    mapModel.set(model.id, model);
+  });
+
+  Object.entries(cloneDeep(listModels)).forEach(([modelName, instance]) => {
+    const newData = instance.data.filter((model) => !mapModel.has(model.id));
+    newListModels = {
+      ...newListModels,
+      [modelName]: {
+        ...instance,
+        data: newData,
+      },
+    };
+  });
+  return newListModels;
+};

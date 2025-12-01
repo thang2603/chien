@@ -1,17 +1,17 @@
 import { Canvas } from "@react-three/fiber";
-
 import { OrbitControls, Stats } from "@react-three/drei";
 import MeshMouse from "./MeshMouse";
 import { useModel } from "../context/useModel";
 import InstanceModel from "../components/instance-model";
-import type { ClipboardEvent, KeyboardEvent, MouseEvent } from "react";
+import type { ClipboardEvent, KeyboardEvent } from "react";
 import type { InstanceModelType, ModelType } from "../types/model";
 import {
   convertMousePosition,
+  copyToClipboard,
   getDeltaPosition,
   pasteFromClipboard,
 } from "../utils/layout";
-import { handleAddListModel } from "../context/utils";
+import { handleAddListModel, handleDeleteListModel } from "../context/utils";
 import { v4 as uuidv4 } from "uuid";
 import cloneDeep from "lodash.clonedeep";
 
@@ -20,12 +20,14 @@ const CanvasLayout = () => {
     listInstances,
     draggingRef,
     mousePositionRef,
+    selectMultiple,
     direction,
-    selectedInstanceRef,
     setListInstances,
+    setSelectMultiple,
   } = useModel();
 
   const handlePaste = async (event: ClipboardEvent<HTMLDivElement>) => {
+    console.log(1);
     event.preventDefault();
     event.stopPropagation();
     const text = await pasteFromClipboard();
@@ -55,26 +57,51 @@ const CanvasLayout = () => {
       console.log("Pasted models:", models);
       const newInstances: Record<string, InstanceModelType> =
         handleAddListModel(models, listInstances);
-      console.log("New instances after paste:", newInstances);
+
       setListInstances(cloneDeep(newInstances));
+    }
+  };
+
+  const handleCopyData = async () => {
+    if (draggingRef.current) return;
+    await copyToClipboard(selectMultiple);
+  };
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (draggingRef.current) return;
+    if (e.key === "Delete" || e.key === "Backspace") {
+      e.stopPropagation();
+      e.preventDefault();
+      const newInstances = handleDeleteListModel(selectMultiple, listInstances);
+      setListInstances(cloneDeep(newInstances));
+      setSelectMultiple([]);
+      return;
+    }
+    if (e.key === "Escape") {
+      e.stopPropagation();
+      e.preventDefault();
+      setSelectMultiple([]);
+      return;
     }
   };
 
   return (
     <Canvas
       camera={{ position: [0, 0, 15], fov: 60 }}
-      onPasteCapture={(event) => handlePaste(event)}
+      onPaste={(event) => handlePaste(event)}
+      onCopy={handleCopyData}
       tabIndex={-1}
+      onKeyDown={(e) => handleKeyDown(e)}
     >
       <MeshMouse>
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} />
-        <pointLight position={[-10, -10, -10]} intensity={0.5} />
+        <ambientLight intensity={1.5} />
+
+        <pointLight position={[-10, -10, -10]} intensity={1.5} />
         {Object.entries(listInstances || {}).map(([modelName, instance]) => (
           <InstanceModel key={modelName} instance={instance} />
         ))}
         <OrbitControls makeDefault enabled={true} />
-        <gridHelper args={[30, 30]} />
+        <gridHelper args={[100, 100, 100]} />
         <axesHelper args={[100]} />
       </MeshMouse>
       <Stats />
