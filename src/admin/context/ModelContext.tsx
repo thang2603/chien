@@ -20,6 +20,7 @@ export interface ModelContextType {
   mousePositionRef: RefObject<VectorType>;
   offsetRef: RefObject<OffsetType>;
   draggingRef: RefObject<VectorType | null>;
+  groupRef: RefObject<Map<string, ModelType[]>>;
 }
 
 const ModelContext = createContext<ModelContextType>({
@@ -33,6 +34,7 @@ const ModelContext = createContext<ModelContextType>({
   mousePositionRef: { current: { x: 0, y: 0, z: 0 } },
   offsetRef: { current: { offsetX: 0, offsetY: 0 } },
   draggingRef: { current: null },
+  groupRef: { current: new Map() },
 });
 
 export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
@@ -46,6 +48,7 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
   const mousePositionRef = useRef<VectorType>({ x: 0, y: 0, z: 0 });
   const draggingRef = useRef<VectorType | null>(null);
   const offsetRef = useRef<OffsetType>({ offsetX: 0, offsetY: 0 });
+  const groupRef = useRef<Map<string, ModelType[]>>(new Map());
 
   return (
     <ModelContext.Provider
@@ -60,6 +63,7 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
         mousePositionRef,
         draggingRef,
         offsetRef,
+        groupRef,
       }}
     >
       {children}

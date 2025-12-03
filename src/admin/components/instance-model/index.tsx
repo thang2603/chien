@@ -6,6 +6,7 @@ import { useFrame, type ThreeEvent } from "@react-three/fiber";
 import cloneDeep from "lodash.clonedeep";
 import { convertNumber, getDeltaPosition } from "../../utils/layout";
 import useMousePosition from "../../context/useMousePosition";
+import { useGLTF } from "@react-three/drei";
 
 interface DataTypeProps {
   instance: InstanceModelType;
@@ -16,14 +17,33 @@ const InstanceModel = ({ instance }: DataTypeProps) => {
     selectedInstanceRef,
     offsetRef,
     selectMultiple,
+    groupRef,
     setSelectMultiple,
   } = useModel();
   const getMousePosition = useMousePosition();
-  const { data } = instance;
+  const { data, url } = instance;
   const meshRef = useRef<THREE.InstancedMesh | null>(null);
   const tempObject = useMemo(() => new THREE.Object3D(), []);
   const tempColor = useMemo(() => new THREE.Color(), []);
   const mapSelect = useRef<Map<string, ModelType>>(new Map());
+
+  const { nodes } = useGLTF(url);
+  const model = useMemo(() => {
+    let val: any = null;
+    if (nodes) {
+      const tempValue: any = { ...nodes };
+      Object.keys(nodes as any).forEach((key) => {
+        if (key !== "Scene") {
+          val = {
+            material: tempValue?.[key]?.material as any,
+            geometry: tempValue?.[key]?.geometry as any,
+          };
+        }
+      });
+    }
+    return val;
+  }, [nodes]);
+  console.log(nodes);
 
   useEffect(() => {
     if (!meshRef.current) return;
@@ -125,7 +145,12 @@ const InstanceModel = ({ instance }: DataTypeProps) => {
     const instanceId = e.instanceId;
     if (instanceId === undefined) return;
     const model = data[instanceId];
-    let newDataSelected: ModelType[] = [model];
+    const groupData = groupRef.current.get(model.id) || [];
+
+    let newDataSelected: ModelType[] = [];
+    newDataSelected = [...groupData].filter((item) => item.id !== model.id);
+    newDataSelected = [...newDataSelected, model];
+
     if (e.shiftKey) {
       const isAlreadySelected = mapSelect.current.has(model.id);
       if (isAlreadySelected) {
@@ -141,12 +166,11 @@ const InstanceModel = ({ instance }: DataTypeProps) => {
     <instancedMesh
       ref={meshRef}
       args={[undefined, undefined, data.length]}
+      material={model?.material}
+      geometry={model?.geometry}
       onPointerDown={(e) => handleMouseDown(e)}
       frustumCulled={false}
-    >
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color="white" />
-    </instancedMesh>
+    />
   );
 };
 

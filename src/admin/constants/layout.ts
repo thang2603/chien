@@ -24,8 +24,28 @@ export const BASIC_MODELS = [
     url: "/models/cube.glb",
   },
   {
-    label: "Cube 1",
-    modelName: "cube1",
-    url: "/models/cube.glb",
+    label: "Cone",
+    modelName: "cone",
+    url: "/models/cone.glb",
+  },
+  {
+    label: "Cylinder",
+    modelName: "cylinder",
+    url: "/models/cylinder.glb",
+  },
+  {
+    label: "Sphere",
+    modelName: "sphere",
+    url: "/models/sphere.glb",
+  },
+  {
+    label: "torus",
+    modelName: "torus",
+    url: "/models/torus.glb",
+  },
+  {
+    label: "glass",
+    modelName: "glass",
+    url: "/models/glass.glb",
   },
 ];

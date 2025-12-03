@@ -34,7 +34,6 @@ const DraggingEvent = () => {
             cloneDeep(selectedInstanceRef.current),
             listInstances
           );
-          console.log(newListInstances);
           setListInstances(newListInstances);
           setSelectMultiple(cloneDeep(selectedInstanceRef.current));
           draggingRef.current = null;

@@ -4,6 +4,7 @@ import type { InstanceModelType, ModelType } from "../../types/model";
 import cloneDeep from "lodash.clonedeep";
 import { useLayoutEffect } from "react";
 import { toast } from "sonner";
+import { exportToJson } from "../../utils/layout";
 
 const SaveModel = () => {
   const { listInstances, setListInstances } = useModel();
@@ -14,6 +15,14 @@ const SaveModel = () => {
     });
     localStorage.setItem("data", JSON.stringify(data));
     toast.success("Saved successfully");
+  };
+
+  const handleExport = () => {
+    let data: ModelType[] = [];
+    Object.values(listInstances).forEach((instance) => {
+      data = [...data, ...cloneDeep(instance.data)];
+    });
+    exportToJson(data);
   };
 
   useLayoutEffect(() => {
@@ -45,14 +54,25 @@ const SaveModel = () => {
   }, [setListInstances]);
 
   return (
-    <Button
-      size="1"
-      variant="soft"
-      onClick={handleSave}
-      className="cursor-pointer!"
-    >
-      Save
-    </Button>
+    <div className="flex items-center gap-2">
+      <Button
+        size="1"
+        variant="solid"
+        onClick={handleSave}
+        className="cursor-pointer!"
+      >
+        Save
+      </Button>
+
+      <Button
+        size="1"
+        variant="soft"
+        onClick={handleExport}
+        className="cursor-pointer!"
+      >
+        Export
+      </Button>
+    </div>
   );
 };
 

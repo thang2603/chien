@@ -14,6 +14,9 @@ import {
 import { handleAddListModel, handleDeleteListModel } from "../context/utils";
 import { v4 as uuidv4 } from "uuid";
 import cloneDeep from "lodash.clonedeep";
+import { ACESFilmicToneMapping, SRGBColorSpace } from "three";
+import TransformableBox from "../components/menu-create/TransformableBox";
+import { toast } from "sonner";
 
 const CanvasLayout = () => {
   const {
@@ -24,6 +27,7 @@ const CanvasLayout = () => {
     direction,
     setListInstances,
     setSelectMultiple,
+    groupRef,
   } = useModel();
 
   const handlePaste = async (event: ClipboardEvent<HTMLDivElement>) => {
@@ -83,26 +87,41 @@ const CanvasLayout = () => {
       setSelectMultiple([]);
       return;
     }
+    if (e.ctrlKey && e.key.toUpperCase() === "Q") {
+      e.stopPropagation();
+      e.preventDefault();
+      if (groupRef.current) {
+        selectMultiple.forEach((item) => {
+          groupRef.current.set(item.id, cloneDeep(selectMultiple));
+        });
+        toast.success("Group selected successfully");
+      }
+      return;
+    }
   };
 
   return (
     <Canvas
-      camera={{ position: [0, 0, 15], fov: 60 }}
+      camera={{ position: [0, 15, 15], fov: 60 }}
       onPaste={(event) => handlePaste(event)}
       onCopy={handleCopyData}
       tabIndex={-1}
       onKeyDown={(e) => handleKeyDown(e)}
+      gl={{
+        outputColorSpace: SRGBColorSpace,
+        toneMapping: ACESFilmicToneMapping,
+      }}
     >
       <MeshMouse>
         <ambientLight intensity={1.5} />
-
         <pointLight position={[-10, -10, -10]} intensity={1.5} />
         {Object.entries(listInstances || {}).map(([modelName, instance]) => (
           <InstanceModel key={modelName} instance={instance} />
         ))}
-        <OrbitControls makeDefault enabled={true} />
-        <gridHelper args={[100, 100, 100]} />
+        <OrbitControls makeDefault />
+        <gridHelper args={[100, 100, 100]} position={[8, -1, 0]} />
         <axesHelper args={[100]} />
+        <TransformableBox />
       </MeshMouse>
       <Stats />
     </Canvas>

@@ -17,7 +17,7 @@ const MenuControlModel = () => {
     useModel();
   const modelEdit: ModelType =
     selectMultiple[selectMultiple.length - 1] || INIT_MODEL;
-  const { position, rotation, scale, id } = modelEdit;
+  const { position, rotation, scale, color, id } = modelEdit;
 
   const handleUpDate = (modelUpdate: ModelType) => {
     const listModelUpdate = handleUpdateListModel([modelUpdate], listInstances);
@@ -118,7 +118,11 @@ const MenuControlModel = () => {
         </div>
         <div className="flex  gap-1">
           <span> Color</span>
-          <input type="color" onChange={(e) => onChangeColor(e.target.value)} />
+          <input
+            type="color"
+            value={color}
+            onChange={(e) => onChangeColor(e.target.value)}
+          />
         </div>
         <div>
           <RepeatModel />
