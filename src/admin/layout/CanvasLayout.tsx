@@ -17,6 +17,7 @@ import cloneDeep from "lodash.clonedeep";
 import { ACESFilmicToneMapping, SRGBColorSpace } from "three";
 import TransformableBox from "../components/menu-create/TransformableBox";
 import { toast } from "sonner";
+import { INIT_POSITION } from "../constants/layout";
 
 const CanvasLayout = () => {
   const {
@@ -31,12 +32,11 @@ const CanvasLayout = () => {
   } = useModel();
 
   const handlePaste = async (event: ClipboardEvent<HTMLDivElement>) => {
-    console.log(1);
     event.preventDefault();
     event.stopPropagation();
     const text = await pasteFromClipboard();
     if (text) {
-      const originalPosition = text[text.length - 1].position;
+      const originalPosition = INIT_POSITION;
       const mousePos = convertMousePosition(
         mousePositionRef.current,
         direction
@@ -58,11 +58,16 @@ const CanvasLayout = () => {
         };
         models.push(newModel);
       });
-      console.log("Pasted models:", models);
+
+      setSelectMultiple(cloneDeep(models));
       const newInstances: Record<string, InstanceModelType> =
         handleAddListModel(models, listInstances);
-
       setListInstances(cloneDeep(newInstances));
+      models.forEach((model) => {
+        if (groupRef.current) {
+          groupRef.current.set(model.id, cloneDeep(models));
+        }
+      });
     }
   };
 
@@ -90,12 +95,22 @@ const CanvasLayout = () => {
     if (e.ctrlKey && e.key.toUpperCase() === "Q") {
       e.stopPropagation();
       e.preventDefault();
-      if (groupRef.current) {
+
+      const isGroup = selectMultiple.some((item) =>
+        groupRef.current.has(item.id)
+      );
+      if (isGroup) {
         selectMultiple.forEach((item) => {
-          groupRef.current.set(item.id, cloneDeep(selectMultiple));
+          groupRef.current.delete(item.id);
         });
-        toast.success("Group selected successfully");
+        toast.success("Ungroup");
+        return;
       }
+      selectMultiple.forEach((item) => {
+        groupRef.current.set(item.id, cloneDeep(selectMultiple));
+      });
+      toast.success("Group");
+
       return;
     }
   };

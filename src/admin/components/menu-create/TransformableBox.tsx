@@ -6,7 +6,7 @@ import cloneDeep from "lodash.clonedeep";
 import { useModel } from "../../context/useModel";
 type ModeType = "translate" | "scale" | "rotate" | undefined;
 const TransformableBox = () => {
-  const { listInstances, setSelectMultiple } = useModel();
+  const { listInstances, setSelectMultiple, isSelectMultiple } = useModel();
   const boxRef = useRef<any>(null);
   const transformRef = useRef<any>(null);
   const [mode, setMode] = useState<ModeType>("translate");
@@ -15,6 +15,7 @@ const TransformableBox = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key.toLowerCase() === "b") {
         setBoxVisible((pre) => !pre);
+        isSelectMultiple.current = !isSelectMultiple.current;
       }
       if (!boxVisible) return;
       switch (e.key.toLowerCase()) {
@@ -32,7 +33,7 @@ const TransformableBox = () => {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [boxVisible]);
+  }, [boxVisible, isSelectMultiple]);
 
   const handleMouseUp = () => {
     const box = boxRef.current;

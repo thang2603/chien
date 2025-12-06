@@ -21,6 +21,7 @@ export interface ModelContextType {
   offsetRef: RefObject<OffsetType>;
   draggingRef: RefObject<VectorType | null>;
   groupRef: RefObject<Map<string, ModelType[]>>;
+  isSelectMultiple: RefObject<boolean>;
 }
 
 const ModelContext = createContext<ModelContextType>({
@@ -35,6 +36,7 @@ const ModelContext = createContext<ModelContextType>({
   offsetRef: { current: { offsetX: 0, offsetY: 0 } },
   draggingRef: { current: null },
   groupRef: { current: new Map() },
+  isSelectMultiple: { current: false },
 });
 
 export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
@@ -49,6 +51,7 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
   const draggingRef = useRef<VectorType | null>(null);
   const offsetRef = useRef<OffsetType>({ offsetX: 0, offsetY: 0 });
   const groupRef = useRef<Map<string, ModelType[]>>(new Map());
+  const isSelectMultiple = useRef<boolean>(false);
 
   return (
     <ModelContext.Provider
@@ -64,6 +67,7 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
         draggingRef,
         offsetRef,
         groupRef,
+        isSelectMultiple,
       }}
     >
       {children}

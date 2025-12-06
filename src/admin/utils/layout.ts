@@ -29,6 +29,7 @@ export async function copyToClipboard(obj: ModelType[]) {
 export const convertMousePosition = (postion: VectorType, dir: string) => {
   const direction = dir.replace("-", "").toLowerCase();
   const newPositon: VectorType = { ...postion, [direction]: 0 };
+  console.log(newPositon);
   return newPositon;
 };
 

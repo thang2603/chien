@@ -18,6 +18,7 @@ const InstanceModel = ({ instance }: DataTypeProps) => {
     offsetRef,
     selectMultiple,
     groupRef,
+    isSelectMultiple,
     setSelectMultiple,
   } = useModel();
   const getMousePosition = useMousePosition();
@@ -142,6 +143,7 @@ const InstanceModel = ({ instance }: DataTypeProps) => {
   const handleMouseDown = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
     if (draggingRef.current) return;
+    if (isSelectMultiple.current) return;
     const instanceId = e.instanceId;
     if (instanceId === undefined) return;
     const model = data[instanceId];
