@@ -44,7 +44,6 @@ const InstanceModel = ({ instance }: DataTypeProps) => {
     }
     return val;
   }, [nodes]);
-  console.log(nodes);
 
   useEffect(() => {
     if (!meshRef.current) return;

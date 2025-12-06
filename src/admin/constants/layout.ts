@@ -48,4 +48,9 @@ export const BASIC_MODELS = [
     modelName: "glass",
     url: "/models/glass.glb",
   },
+  {
+    label: "location",
+    modelName: "location",
+    url: "/models/location.glb",
+  },
 ];
