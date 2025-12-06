@@ -15,7 +15,11 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: "/layout",
-    element: <LayoutPage />,
+    path: "/layout/:id",
+    element: (
+      <DefaultLayout>
+        <LayoutPage />,
+      </DefaultLayout>
+    ),
   },
 ]);

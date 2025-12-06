@@ -2,7 +2,7 @@ import { Tabs, Box, Text } from "@radix-ui/themes";
 import BasicModel from "./BasicModel";
 const MenuModel = () => {
   return (
-    <div className=" h-screen bg-white ">
+    <div className="h-[calc(100vh-80px)] w-[200px] bg-white ">
       <div>
         <Tabs.Root defaultValue="basic">
           <Tabs.List>

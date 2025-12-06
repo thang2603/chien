@@ -8,9 +8,9 @@ import CanvasLayout from "./CanvasLayout";
 const Layout = () => {
   return (
     <ModelProvider>
-      <div className="w-screen h-screen bg-gray-200 relative">
+      <div className="bg-gray-200 relative">
         <div className="flex w-full h-full gap-1">
-          <div className="h-screen w-[calc(100vw-200px)] relative border border-gray-300">
+          <div className="h-[calc(100vh-75px)] w-[calc(100vw-200px)] relative border border-gray-300">
             <CanvasLayout />
             <MenuControlModel />
             <MenuControlMultipleModel />

@@ -5,7 +5,7 @@ interface DataTypeProps {
 }
 const DefaultLayout = ({ children }: DataTypeProps) => {
   return (
-    <div className="w-screen h-screen ">
+    <div className="w-screen h-screen">
       <div className="border-t border-b border-gray-500 h-12">
         <div>
           <PersonIcon />
