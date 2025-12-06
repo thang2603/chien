@@ -1,9 +1,11 @@
-import Layout from "./admin/layout";
+import { Outlet } from "react-router-dom";
+import Home from "./pages/home";
 
 const App = () => {
   return (
     <div>
-      <Layout />
+      <Home />
+      <Outlet />
     </div>
   );
 };
