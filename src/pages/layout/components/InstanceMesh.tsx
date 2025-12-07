@@ -3,7 +3,7 @@ import type { InstanceModelType } from "../../../admin/types/model";
 import * as THREE from "three";
 import { useEffect, useMemo, useRef } from "react";
 import cloneDeep from "lodash.clonedeep";
-import type { ThreeEvent } from "@react-three/fiber";
+import { useThree, type ThreeEvent } from "@react-three/fiber";
 import { useLayout } from "../context/useLayout";
 
 interface DataTypeProps {
@@ -11,6 +11,8 @@ interface DataTypeProps {
 }
 const InstanceMesh = ({ instance }: DataTypeProps) => {
   const { data, url } = instance;
+  const { camera } = useThree();
+
   const { modelEdit, setModelEdit } = useLayout();
   const meshRef = useRef<THREE.InstancedMesh | null>(null);
   const tempObject = useMemo(() => new THREE.Object3D(), []);
@@ -70,6 +72,15 @@ const InstanceMesh = ({ instance }: DataTypeProps) => {
     if (instanceId === undefined) return;
     const model = data[instanceId];
     setModelEdit(cloneDeep(model));
+
+    const target = cloneDeep(model.position);
+    const offset = new THREE.Vector3(0, 2, 4);
+    const targetPos = new THREE.Vector3(target.x, target.y, target.z).add(
+      offset
+    );
+
+    camera.position.lerp(targetPos, 0.05);
+    camera.lookAt(target.x, target.y, target.z);
   };
 
   return (
