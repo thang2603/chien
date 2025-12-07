@@ -16,6 +16,8 @@ export interface ModelType {
   rotation: VectorType;
   scale: VectorType;
   color: string;
+  title?: string;
+  description?: string;
   createdAt: string;
   updatedAt: string;
   version: number;

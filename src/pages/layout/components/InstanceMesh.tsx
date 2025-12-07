@@ -1,23 +1,17 @@
 import { useGLTF } from "@react-three/drei";
-import type { InstanceModelType, ModelType } from "../../../admin/types/model";
+import type { InstanceModelType } from "../../../admin/types/model";
 import * as THREE from "three";
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { useEffect, useMemo, useRef } from "react";
 import cloneDeep from "lodash.clonedeep";
 import type { ThreeEvent } from "@react-three/fiber";
+import { useLayout } from "../context/useLayout";
 
 interface DataTypeProps {
   instance: InstanceModelType;
-  modelEdit: ModelType | null;
-  setModelEdit: Dispatch<SetStateAction<ModelType | null>>;
 }
-const InstanceMesh = ({ instance, setModelEdit, modelEdit }: DataTypeProps) => {
+const InstanceMesh = ({ instance }: DataTypeProps) => {
   const { data, url } = instance;
+  const { modelEdit, setModelEdit } = useLayout();
   const meshRef = useRef<THREE.InstancedMesh | null>(null);
   const tempObject = useMemo(() => new THREE.Object3D(), []);
   const tempColor = useMemo(() => new THREE.Color(), []);
@@ -46,7 +40,7 @@ const InstanceMesh = ({ instance, setModelEdit, modelEdit }: DataTypeProps) => {
       const { position, rotation, scale, color, id } = item;
       const isSelected = modelEdit?.id === id;
       if (isSelected) {
-        tempColor.set("#ff0000"); // Highlight selected instances in red
+        tempColor.set("#000000");
       } else {
         tempColor.set(color);
       }
@@ -74,8 +68,8 @@ const InstanceMesh = ({ instance, setModelEdit, modelEdit }: DataTypeProps) => {
     e.stopPropagation();
     const instanceId = e.instanceId;
     if (instanceId === undefined) return;
-    const model = cloneDeep(data[instanceId]);
-    setModelEdit(model);
+    const model = data[instanceId];
+    setModelEdit(cloneDeep(model));
   };
 
   return (

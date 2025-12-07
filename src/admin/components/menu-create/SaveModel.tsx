@@ -7,14 +7,14 @@ import { toast } from "sonner";
 import { exportToJson } from "../../utils/layout";
 import { useParams } from "react-router-dom";
 import { getLayoutDetail, putLayout } from "../../../services/layout";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Loading from "../../../component/loading";
 
 const SaveModel = () => {
   const { id } = useParams();
 
   const { listInstances, setListInstances } = useModel();
-
+  const queryClient = useQueryClient();
   const { data: dataLayout, isFetching } = useQuery({
     queryKey: ["layout", id],
     queryFn: () => getLayoutDetail(id as string),
@@ -30,6 +30,7 @@ const SaveModel = () => {
       }),
     onSuccess: () => {
       toast.success("Lưu thành công");
+      queryClient.invalidateQueries({ queryKey: ["layout"] });
     },
     onError: () => {
       toast.error("Lưu thất bại");
@@ -43,7 +44,6 @@ const SaveModel = () => {
     });
     if (id) {
       putMutation.mutate(data);
-      localStorage.setItem("data", JSON.stringify(data));
     }
   };
 
